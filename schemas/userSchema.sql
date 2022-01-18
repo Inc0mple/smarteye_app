@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS User (
+    userId INTEGER PRIMARY KEY AUTOINCREMENT,
+    username VARCHAR(32) NOT NULL,
+    email VARCHAR(64) NOT NULL,
+    phone VARCHAR(16) NOT NULL,
+    password VARCHAR(64) NOT NULL
+);
+INSERT INTO User 
+VALUES (1, 'admin','smarteye012@gmail.com','+65 91111111','$2b$12$2CiM0w/awIvFhobncVOJUez1HQTpfDbQ4.CmE3gGVQMvJX.bRYXpa');

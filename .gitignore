@@ -1,0 +1,4 @@
+.streamlit/
+docker/
+virtenv/
+__pycache__/
