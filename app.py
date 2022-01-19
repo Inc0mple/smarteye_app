@@ -266,7 +266,7 @@ def update_user_info(dbPath, inputUsername,newEmail,newPhone):
 def find_all_user_info(dbPath):
     conn = get_db_connection(dbPath,LOCAL)
     cur = conn.cursor()
-    cur.execute("SELECT * from user;")
+    cur.execute("SELECT * from User;")
     result = cur.fetchall()
     return result
 
