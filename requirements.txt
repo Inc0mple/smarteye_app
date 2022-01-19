@@ -4,7 +4,8 @@ mediapipe==0.8.9.1
 #cffi==1.15.0
 mysql-connector-python==8.0.27
 numpy==1.19.2
-opencv_python==3.4.10.37
+#opencv_python==3.4.10.37
+opencv-python-headless==4.1.2.30
 openpifpaf==0.12.14
 pandas==1.0.5
 Pillow==9.0.0
@@ -17,3 +18,4 @@ streamlit_webrtc==0.34.2
 torch==1.10.1
 torchvision==0.11.2
 yagmail==0.15.277
+
