@@ -1,5 +1,5 @@
 from locale import locale_encoding_alias
-from streamlit_webrtc import VideoProcessorBase, VideoTransformerBase, webrtc_streamer, WebRtcMode, RTCConfiguration
+from streamlit_webrtc import VideoProcessorBase, VideoTransformerBase, webrtc_streamer, WebRtcMode
 import streamlit_authenticator as stauth
 import cv2
 import av
@@ -36,9 +36,6 @@ onlineDb = mysql.connector.connect(user=st.secrets["db_username"],
     host=st.secrets["db_host"],
     database=st.secrets["db_username"])
 
-RTC_CONFIGURATION = RTCConfiguration(
-    {"iceServers": [{"urls": ["stun:stun4.l.google.com:19302"]}]}
-)
 
 if "logged_in" not in st.session_state or "username" not in st.session_state:
     st.session_state.logged_in = False
@@ -840,8 +837,6 @@ elif choice == "Login/Use Device":
             st.subheader("SmartEye Fall Detection")
             webrtc_ctx = webrtc_streamer(
                 key="fall-detection",
-                mode=WebRtcMode.SENDRECV,
-                rtc_configuration=RTC_CONFIGURATION,
                 video_processor_factory=VideoProcessorFallLSTM, 
                 media_stream_constraints={"video": True, "audio": False},
                 async_processing=True
@@ -854,8 +849,6 @@ elif choice == "Login/Use Device":
             st.subheader("MediaPipe Pose Estimation")
             webrtc_ctx2 = webrtc_streamer(
                 key="fall-detection2",
-                mode=WebRtcMode.SENDRECV,
-                rtc_configuration=RTC_CONFIGURATION,
                 video_processor_factory=VideoProcessorMediapipePose, 
                 media_stream_constraints={"video": True, "audio": False},
                 async_processing=True
@@ -875,8 +868,6 @@ elif choice == "Login/Use Device":
             st.subheader("OpenCV Fall Detection")
             webrtc_ctx3 = webrtc_streamer(
                 key="fall-detection3",
-                mode=WebRtcMode.SENDRECV,
-                rtc_configuration=RTC_CONFIGURATION,
                 video_processor_factory=VideoProcessorOpenCV, 
                 media_stream_constraints={"video": True, "audio": False},
                 async_processing=True
