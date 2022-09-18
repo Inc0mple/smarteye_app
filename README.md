@@ -2,7 +2,7 @@
 
 AI web app for automatic fall detection with email notifiation using Python, Streamlit, SQL and OpenPifPaf. USES INTEGRATED CAMERA ON LAPTOPS.
 
-https://user-images.githubusercontent.com/42108450/190652415-55ec144c-7ee2-47aa-9fc0-da17a5cf6db9.mp4
+https://user-images.githubusercontent.com/42108450/190897690-0dfd0d81-b11f-493a-853a-c4641d64ccc0.mp4
 
 # Features
 
