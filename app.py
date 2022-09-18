@@ -28,13 +28,13 @@ import yagmail
 from datetime import datetime, timedelta
 import mysql.connector
 
-LOCAL = False
+LOCAL = True
 
 
 onlineDb = mysql.connector.connect(user=st.secrets["db_username"],
     password=st.secrets["db_password"],
     host=st.secrets["db_host"],
-    database=st.secrets["db_username"])
+    database=st.secrets["db_username"]) if not LOCAL else None
 
 
 if "logged_in" not in st.session_state or "username" not in st.session_state:
@@ -243,7 +243,8 @@ def find_user_logs(dbPath, inputId):
 
 def update_user_info(dbPath, inputUsername,newEmail,newPhone):
     conn = get_db_connection(dbPath)
-    conn.reconnect()
+    if not LOCAL:
+        conn.reconnect()
     cur = conn.cursor()
     if LOCAL:
         sql = f"""
@@ -404,7 +405,8 @@ def change_config(dbPath, configDict):
 
 def insert_eventLog(dbPath, inputUsername, deviceId, eventId):
     conn = get_db_connection(dbPath)
-    conn.reconnect()
+    if not LOCAL:
+        conn.reconnect()
     cur = conn.cursor()
     if LOCAL:
         cur.execute(f"""
@@ -487,14 +489,15 @@ class VideoProcessorFallLSTM(VideoProcessorBase):
         self.routLogTimeThresh = timedelta(hours=self.logIntervalDt.hour,minutes=self.logIntervalDt.minute,seconds=self.logIntervalDt.second)
         self.routEmailTimeThresh = timedelta(hours=self.emailIntervalDt.hour,minutes=self.emailIntervalDt.minute,seconds=self.emailIntervalDt.second)
         insert_eventLog("data.db",self.username,self.deviceId,2)
-        if self.userConfig["emailLogs"]:
-            email_device_start(self.username,self.deviceId,self.email,datetime.now())
+        # if self.userConfig["emailLogs"]:
+            # print(self.username,self.deviceId,self.email,datetime.now())
+            # email_device_start(self.username,self.deviceId,self.email,datetime.now())
         #print(f"Init inputvar: {self.inputVar} ")
     
     def __del__(self):
         insert_eventLog("data.db",self.username,self.deviceId,4)
-        if self.userConfig["emailLogs"]:
-            email_device_stop(self.username,self.deviceId,self.email,datetime.now())
+        # if self.userConfig["emailLogs"]:
+            # email_device_stop(self.username,self.deviceId,self.email,datetime.now())
 
     def cli(self):
         parser = argparse.ArgumentParser(
@@ -610,10 +613,10 @@ class VideoProcessorFallLSTM(VideoProcessorBase):
         if timeSinceLastLog > self.routLogTimeThresh:
             insert_eventLog("data.db",self.username,self.deviceId,3)
             self.lastRoutLogTime = datetime.now()
-        if self.userConfig["emailLogs"]:
-            if timeSinceLastEmail > self.routEmailTimeThresh:
-                email_logs("data.db",self.userId,self.email,self.lastEmailLogTime,datetime.now())
-                self.lastEmailLogTime = datetime.now()
+        # if self.userConfig["emailLogs"]:
+        #     if timeSinceLastEmail > self.routEmailTimeThresh:
+        #         email_logs("data.db",self.userId,self.email,self.lastEmailLogTime,datetime.now())
+        #         self.lastEmailLogTime = datetime.now()
         if fallStatus == "FALL":
             self.time_since_fall = 0
             if not self.recent_fall:
@@ -622,7 +625,7 @@ class VideoProcessorFallLSTM(VideoProcessorBase):
                     print("ALERTING USER")
                     #st.warning("Fall detected! Logging event!")
                     insert_eventLog("data.db",self.username,self.deviceId,1)
-                    alert_email(self.username,self.deviceId,self.email,img)
+                    # alert_email(self.username,self.deviceId,self.email,img)
                     #st.warning(f"Sending alert to {self.email}!")
                 self.recent_fall = True
                 self.count_fall_recency = True
@@ -830,7 +833,9 @@ elif choice == "Login/Use Device":
             st.success("Logged In as {}".format(st.session_state.username))
     if st.session_state.logged_in:
         st.write('Welcome *%s*' % (st.session_state.username))
-        task = st.selectbox("Task",["SmartEye Fall Detection","MediaPipe Pose Estimation","OpenCV Fall Detection"])
+        taskList = ["SmartEye Fall Detection","MediaPipe Pose Estimation","OpenCV Fall Detection"]
+        truncatedTaskList = ["MediaPipe Pose Estimation","OpenCV Fall Detection"]
+        task = st.selectbox("Task",taskList)
 
 
         if task == "SmartEye Fall Detection":
@@ -845,7 +850,7 @@ elif choice == "Login/Use Device":
             myVar = "hi"
             if webrtc_ctx.video_processor:
                 webrtc_ctx.video_processor.username = st.session_state.username
-        elif task == "MediaPipe Pose Estimation":
+        if task == "MediaPipe Pose Estimation":
             st.subheader("MediaPipe Pose Estimation")
             webrtc_ctx2 = webrtc_streamer(
                 key="fall-detection2",

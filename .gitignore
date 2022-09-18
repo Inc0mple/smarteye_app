@@ -1,5 +1,5 @@
 .streamlit/
 docker/
-virtenv/
+env/
 __pycache__/
 commandsForSelf.txt

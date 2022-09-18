@@ -6,4 +6,4 @@ CREATE TABLE IF NOT EXISTS User (
     password VARCHAR(64) NOT NULL
 );
 INSERT INTO User 
-VALUES (1, 'admin','smarteye012@gmail.com','+65 91111111','$2b$12$2CiM0w/awIvFhobncVOJUez1HQTpfDbQ4.CmE3gGVQMvJX.bRYXpa');
+VALUES (1, 'admin','smarteye012@gmail.com','+65 91111111','$2b$12$NO2UiximT5lVK7GoHK3XJ.XEBylp3K15zEq/7xBJyINHIJyGUdfFi');
